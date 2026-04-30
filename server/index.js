@@ -11,16 +11,14 @@ const port = process.env.PORT || 9000;
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://your-frontend-domain.vercel.app"
+    "https://portfolio-react-server-akash.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   credentials: true
 }));
 app.use(express.json());
 
-const password = encodeURIComponent(process.env.DB_PASS);
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${password}@cluster0.j0hxo.mongodb.net/portfolio-project?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.j0hxo.mongodb.net/portfolio-project?retryWrites=true&w=majority`;
 
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version

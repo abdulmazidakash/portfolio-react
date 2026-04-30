@@ -1,32 +1,33 @@
-import { useContext, useState } from "react";
-import { motion } from "framer-motion";
+import { useContext, useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
-import { ThemeContext } from "../../contexts/ThemeContext"; // Import ThemeContext
+import { ThemeContext } from "../../contexts/ThemeContext";
 import Swal from "sweetalert2";
 
 const ContactInformation = () => {
-  const { darkMode } = useContext(ThemeContext); // Get dark mode state
+  const { darkMode } = useContext(ThemeContext);
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
 
-  // Handle Input Change
-  const handleChange = e => {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit Handler
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple validation
     if (!formData.name || !formData.email || !formData.message) {
       Swal.fire({
-        icon: 'warning',
-        title: 'Oops...',
-        text: 'All fields are required!',
+        icon: "warning",
+        title: "Oops...",
+        text: "All fields are required!",
       });
       return;
     }
@@ -34,108 +35,216 @@ const ContactInformation = () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/send-email`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       const data = await res.json();
 
       if (res.ok) {
         Swal.fire({
-          icon: 'success',
-          title: 'Message Sent!',
-          text: 'Your message has been sent successfully.',
+          icon: "success",
+          title: "Message Sent!",
+          text: "Thank you! I'll get back to you soon.",
         });
         setFormData({ name: "", email: "", message: "" });
       } else {
         Swal.fire({
-          icon: 'error',
-          title: 'Failed!',
-          text: data.message || 'Something went wrong!',
+          icon: "error",
+          title: "Failed",
+          text: data.message || "Something went wrong. Please try again.",
         });
       }
     } catch (error) {
       Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Network error. Please try again later.',
+        icon: "error",
+        title: "Error",
+        text: "Network error. Please try again later.",
       });
-      console.error("Email Send Error: ", error);
+      console.error("Email Send Error:", error);
     }
   };
 
+  const contactInfo = [
+    {
+      icon: <FaPhone />,
+      label: "Phone",
+      value: "+88-018882-185628",
+      color: "#22c55e",
+    },
+    {
+      icon: <FaEnvelope />,
+      label: "Email",
+      value: "akashabdulmazid@gmail.com",
+      color: "#6366f1",
+    },
+    {
+      icon: <FaMapMarkerAlt />,
+      label: "Location",
+      value: "Feni, Bangladesh",
+      color: "#f59e0b",
+    },
+  ];
+
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      id="contact"
-      className={`p-8 shadow-lg rounded-lg flex flex-col lg:flex-row items-center justify-between w-full gap-4 mx-auto ${
-        darkMode ? "bg-gray-900 text-white" : "bg-base-200 text-gray-900"
-      }`}
-    >
-      {/* Left Section - Contact Info */}
-      <div className="space-y-4 w-full lg:w-1/2 text-center font-semibold lg:text-left">
-        <h2 className={`text-3xl font-bold mb-6 text-center ${
-          darkMode ? "text-white" : "text-black"
-        }`}>
-          Contact Information
-        </h2>
-        <div className="space-y-4">
-          <div className={`flex items-center p-3 rounded-lg justify-center lg:justify-start ${
-            darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"
-          }`}>
-            <FaPhone className="text-xl mr-3" />
-            <p>+88-018882-185628</p>
+    <section id="contact" className="py-20 relative overflow-hidden">
+      {/* Subtle background grid (matching Education) */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+      />
+
+      <div className="container mx-auto px-6" ref={sectionRef}>
+        {/* Section Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className={`text-4xl font-bold mb-2 ${darkMode ? "text-white" : "text-black"}`}>
+            Get In Touch<span className="text-purple-500">_</span>
+          </h2>
+          <p className={`text-gray-400 text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+            Have a project in mind? Let&apos;s discuss how we can work together.
+          </p>
+          <div className="mt-3 mx-auto w-16 h-1 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500" />
+        </motion.div>
+
+        <div className="grid lg:grid-cols-5 gap-12">
+          {/* Left: Contact Information */}
+          <div className="lg:col-span-2 space-y-8">
+            {contactInfo.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                whileHover={{ y: -4 }}
+                className={`group relative rounded-2xl p-6 border transition-all duration-300 ${
+                  darkMode
+                    ? "bg-gray-900/70 border-white/10 hover:border-white/20"
+                    : "bg-white border-gray-200 hover:border-gray-300 shadow-sm"
+                }`}
+              >
+                <div className="flex items-start gap-5">
+                  <div
+                    className="p-4 rounded-xl flex-shrink-0 text-2xl"
+                    style={{
+                      color: item.color,
+                      backgroundColor: `${item.color}15`,
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+
+                  <div className="pt-1">
+                    <p className={`uppercase tracking-widest text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}>
+                      {item.label}
+                    </p>
+                    <p className={`text-[17px] font-medium break-all ${darkMode ? "text-white" : "text-gray-900"}`}>
+                      {item.value}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Subtle accent line */}
+                <div
+                  className="absolute bottom-0 left-6 right-6 h-[2px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ background: `linear-gradient(90deg, ${item.color}, transparent)` }}
+                />
+              </motion.div>
+            ))}
           </div>
-          <div className={`flex items-center p-3 rounded-lg justify-center lg:justify-start ${
-            darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"
-          }`}>
-            <FaEnvelope className="text-xl mr-3" />
-            <p>akashabdulmazid@gmail.com</p>
-          </div>
-          <div className={`flex items-center p-3 rounded-lg justify-center lg:justify-start ${
-            darkMode ? "bg-gray-800 text-white" : "bg-indigo-200 text-gray-900"
-          }`}>
-            <FaMapMarkerAlt className="text-xl mr-3" />
-            <p>Feni, Bangladesh</p>
-          </div>
+
+          {/* Right: Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className={`lg:col-span-3 rounded-3xl p-8 lg:p-10 border transition-all ${
+              darkMode
+                ? "bg-gray-900/80 border-white/5 backdrop-blur-md"
+                : "bg-white border-gray-100 shadow-lg"
+            }`}
+            style={{
+              boxShadow: darkMode ? "0 10px 40px rgba(0, 0, 0, 0.4)" : "0 10px 30px rgba(0, 0, 0, 0.08)",
+            }}
+          >
+            <form onSubmit={handleSubmit} className="space-y-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your name"
+                    className={`w-full h-12 px-5 rounded-2xl border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all ${
+                      darkMode
+                        ? "bg-gray-800 border-gray-700 text-white placeholder-gray-500"
+                        : "bg-gray-50 border-gray-300 text-gray-900"
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
+                    className={`w-full h-12 px-5 rounded-2xl border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all ${
+                      darkMode
+                        ? "bg-gray-800 border-gray-700 text-white placeholder-gray-500"
+                        : "bg-gray-50 border-gray-300 text-gray-900"
+                    }`}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                  Your Message
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={2}
+                  placeholder="Write your message here..."
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:ring-purple-500 resize-y min-h-[160px] transition-all ${
+                    darkMode
+                      ? "bg-gray-800 border-gray-700 text-white placeholder-gray-500"
+                      : "bg-gray-50 border-gray-300 text-gray-900"
+                  }`}
+                />
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                className={`btn w-full btn-primary border-b-2 px-6 py-3 text-lg ${darkMode ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-600 hover:bg-blue-700"}`}
+              >
+                Send Message
+              </motion.button>
+            </form>
+          </motion.div>
         </div>
       </div>
-
-      {/* Right Section - Contact Form */}
-      <div className="w-full lg:w-1/2 mt-6 lg:mt-0">
-        <form className="space-y-4" onSubmit={handleSubmit}>
-            <input 
-              name="name"
-              type="text" 
-              placeholder="Your Name" 
-              value={formData.name}
-              onChange={handleChange}
-              className={`input input-bordered w-full ${darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white text-gray-900"}`}
-            />
-            <input 
-              name="email"
-              type="email" 
-              placeholder="Your Email"
-              value={formData.email}
-              onChange={handleChange}
-              className={`input input-bordered w-full ${darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white text-gray-900"}`}
-            />
-            <textarea 
-              name="message"
-              placeholder="Your Message"
-              value={formData.message}
-              onChange={handleChange}
-              className={`textarea textarea-bordered w-full ${darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white text-gray-900"}`}
-            ></textarea>
-            <button type="submit" className="btn btn-primary border-b-2 w-full">Send</button>
-          </form>
-
-      </div>
-    </motion.div>
+    </section>
   );
 };
 

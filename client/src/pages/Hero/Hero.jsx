@@ -1,12 +1,20 @@
 import { FaFacebook, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
+import { useContext } from "react";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 const Hero = () => {
+  const { darkMode } = useContext(ThemeContext);
   return (
-    <div className="relative flex items-center justify-center bg-black overflow-hidden rounded-lg p-12">
+    <div className="relative flex items-center justify-center overflow-hidden rounded-lg p-12">
       {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-green-900 opacity-80"></div>
+      <div   className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}></div>
 
       {/* Grid Pattern Background */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-grid.png')] opacity-20"></div>
@@ -24,7 +32,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold"
+            className={`text-3xl md:text-4xl lg:text-5xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}
           >
             Hi, This is
           </motion.h1>
@@ -32,7 +40,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mt-2 lg:mt-4"
+            className={`text-3xl md:text-4xl lg:text-5xl font-bold mt-2 lg:mt-4 ${darkMode ? "text-white" : "text-gray-900"}`}
           >
             Abdul Mazid Akash
           </motion.h1>
@@ -40,7 +48,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7 }}
-            className="py-4 text-lg md:text-xl text-gray-300"
+            className={`py-4 text-lg md:text-xl ${darkMode ? "text-gray-300" : "text-gray-700"}`}
           >
             Frontend Developer | Web Enthusiast
           </motion.p>
@@ -52,16 +60,16 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.9 }}
             className="flex justify-center lg:justify-start gap-6 my-4"
           >
-            <a href="https://github.com/abdulmazidakash" className="text-2xl hover:text-gray-300 transition" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/abdulmazidakash" className={`text-2xl hover:text-gray-300 transition ${darkMode ? "text-gray-300" : "text-gray-700"}`} target="_blank" rel="noopener noreferrer">
               <FaGithub />
             </a>
-            <a href="https://www.linkedin.com/in/abdulmazidakash/" className="text-2xl hover:text-gray-300 transition" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.linkedin.com/in/abdulmazidakash/" className={`text-2xl hover:text-gray-300 transition ${darkMode ? "text-gray-300" : "text-gray-700"}`} target="_blank" rel="noopener noreferrer">
               <FaLinkedin />
             </a>
-            <a href="https://x.com/abdulmazidakash" className="text-2xl hover:text-gray-300 transition" target="_blank" rel="noopener noreferrer">
+            <a href="https://x.com/abdulmazidakash" className={`text-2xl hover:text-gray-300 transition ${darkMode ? "text-gray-300" : "text-gray-700"}`} target="_blank" rel="noopener noreferrer">
               <FaTwitter />
             </a>
-            <a href="https://www.facebook.com/akashabdulmazid/" className="text-2xl hover:text-gray-300 transition" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.facebook.com/akashabdulmazid/" className={`text-2xl hover:text-gray-300 transition ${darkMode ? "text-gray-300" : "text-gray-700"}`} target="_blank" rel="noopener noreferrer">
               <FaFacebook />
             </a>
           </motion.div>
@@ -77,7 +85,7 @@ const Hero = () => {
               target="_blank" 
               href="https://drive.google.com/file/d/1wVq1FbMoFVevw7zMfkUZMsh9EEIopk3R/view?usp=sharing" 
               download
-              className="btn btn-primary border-b-2 px-6 py-3 text-lg"
+              className={`btn btn-primary border-b-2 px-6 py-3 text-lg ${darkMode ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-600 hover:bg-blue-700"}`}
             >
             <Typewriter
           words={['Download Resume', 'Get My CV', 'Resume Here!']}

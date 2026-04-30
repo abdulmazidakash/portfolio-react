@@ -1,100 +1,126 @@
-import { useContext } from "react";
-import { motion } from "framer-motion";
+import { useContext, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { Typewriter } from "react-simple-typewriter";
-import lottieAbout from '../../assets/lottie/about.json'
+import lottieAbout from '../../assets/lottie/about.json';
 import Lottie from "lottie-react";
 
-
 const AboutMe = () => {
-  const { darkMode } = useContext(ThemeContext); // Get dark mode state
+  const { darkMode } = useContext(ThemeContext);
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   return (
-    <motion.div
-      id="about"
-      className={`container mx-auto px-4 sm:px-6 py-8 md:py-12 font-semibold rounded-lg my-8 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-      }`}
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-    >
-      {/* Title Section */}
-      <div className="text-center mb-6 md:mb-8">
-        <motion.h1
-          className={`text-3xl md:text-4xl font-extrabold ${
-            darkMode ? "text-white" : "text-gray-800"
-          }`}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <Typewriter
-          words={['About Me']}
-          loop={Infinity}
-          cursor
-          cursorStyle="_"
-          typeSpeed={90}
-          deleteSpeed={50}
-          delaySpeed={1000}
-        />
-        </motion.h1>
-        <motion.p
-          className={`text-base md:text-lg ${
-            darkMode ? "text-gray-300" : "text-gray-600"
-          } mt-1 md:mt-2`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-        >
-          A little bit about myself
-        </motion.p>
-      </div>
+    <section id="about" className="py-20 relative overflow-hidden">
+      {/* Subtle grid background - consistent with Education & Skills */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+      />
 
-      {/* Main Content Section */}
-      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
-                  {/* Hobbies Section */}
+      <div className="container mx-auto px-6" ref={sectionRef}>
+        {/* Top Heading */}
         <motion.div
-          className={`card shadow-xl p-4 md:p-6 overflow-hidden ${
-            darkMode ? "bg-gray-800 text-gray-200" : "bg-base-100 text-gray-700"
-          }`}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-16"
         >
-         
-          <Lottie
-            animationData={lottieAbout}
-            loop={true}
-            className="w-full h-96"/>
-       
+          <h2 className={`text-4xl font-bold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
+            About Me<span className="text-purple-500">_</span>
+          </h2>
+          
+          <p className={`text-sm font-medium mb-6 ${darkMode ? "text-purple-400" : "text-purple-600"}`}>
+            Know more about who I am
+          </p>
+
+          <div className="w-16 h-1 rounded-full bg-gradient-to-r from-purple-500 via-indigo-500 to-emerald-400 mx-auto" />
         </motion.div>
 
-        {/* Introduction Section */}
-        <motion.div
-          className={`card shadow-xl p-4 md:p-6 overflow-hidden ${
-            darkMode ? "bg-gray-800 text-gray-200" : "bg-base-100 text-gray-700"
-          }`}
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-        >
-          <div className="card-body p-0 md:p-4">
-            <p className=" text-base font-semibold text-justify">
-            This is <a className="underline text-blue-500" target="_blank" href="https://github.com/abdulmazidakash">Abdul Mazid Akash</a>. I’m a student currently studying B.Sc. in Textile Engineering at Narsingdi Textile Engineering College. My hometown is Feni, but I’m now living in Narsingdi for my studies.
-            </p>
-            <p className="text-base font-semibold text-justify">
-            I recently completed a web development course from <a className="underline text-blue-500" target="_blank" href="https://www.programming-hero.com/">Programming Hero</a>. Right now, I’m building web applications using JavaScript, React.js, Node.js, and MongoDB. I enjoy creating websites that are both user-friendly and responsive.
-            </p>
-            <p className="text-base font-semibold text-justify">
-            I’ve worked on several projects, including <a className="underline text-blue-500" target="_blank" href="https://scholarship-hub-akash.netlify.app/">ScholarshipHub</a>, a scholarship management system. One of my main team projects is <a  className="underline text-blue-500" target="_blank" href="https://tickto-booking.netlify.app/">TickTo</a>, a bus ticket booking platform. In TickTo, I worked on real-time seat selection and secure payment features. This project helped me grow my frontend and backend skills and taught me how to work well in a team.
-            </p>
-          </div>
-        </motion.div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left: Lottie Animation */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="lg:col-span-5 flex justify-center"
+          >
+            <div className={`relative rounded-3xl overflow-hidden p-4 w-full max-w-md lg:max-w-lg
+              ${darkMode ? "bg-gray-900/70" : "bg-white shadow-xl"}`}
+            >
+              <Lottie
+                animationData={lottieAbout}
+                loop={true}
+                className="w-full h-auto"
+              />
+            </div>
+          </motion.div>
 
+          {/* Right: Introduction Text */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+            className="lg:col-span-7"
+          >
+            <div className={`rounded-3xl p-8 lg:p-10 border transition-all
+              ${darkMode 
+                ? "bg-gray-900/70 border-white/10" 
+                : "bg-white border-gray-100 shadow-lg"
+              }`}
+            >
+              <div className="space-y-6 text-[15.5px] leading-relaxed">
+                <p className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                  This is <span className="font-semibold text-purple-500">Abdul Mazid Akash</span>. 
+                  I’m a student currently pursuing a B.Sc. in Textile Engineering at 
+                  <span className="font-medium"> Narsingdi Textile Engineering College</span>. 
+                  My hometown is Feni, and I’m currently living in Narsingdi for my studies.
+                </p>
 
+                <p className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                  I recently completed a comprehensive web development course from 
+                  <a 
+                    href="https://www.programming-hero.com/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="underline text-blue-500 hover:text-blue-600 transition-colors"
+                  >
+                    Programming Hero
+                  </a>. 
+                  Currently, I’m focused on building modern web applications using 
+                  JavaScript, React.js, Node.js, and MongoDB.
+                </p>
+
+                <p className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                  I’ve worked on several projects, including 
+                  <a 
+                    href="https://scholarship-hub-akash.netlify.app/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="underline text-blue-500 hover:text-blue-600 transition-colors"
+                  >
+                    ScholarshipHub
+                  </a>, 
+                  a scholarship management system. One of my notable team projects is 
+                  <a 
+                    href="https://tickto-booking.netlify.app/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="underline text-blue-500 hover:text-blue-600 transition-colors"
+                  >
+                    TickTo
+                  </a>, 
+                  a bus ticket booking platform where I contributed to real-time seat selection and secure payment features.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </section>
   );
 };
 

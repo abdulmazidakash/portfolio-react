@@ -12,6 +12,7 @@ import AddProject from "./personal-dashboard/AddProject";
 import AllProject from "./personal-dashboard/AllProject";
 import EditProjectForm from "./personal-dashboard/EditProjectForm";
 import Projects from "./pages/projects/Projects";
+import Education from "./pages/Education/Education";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
                 <AboutMe />
                 <Projects />
                 <SkillsSection />
+                <Education/>
                 <ContactInformation />
               </div>
             }

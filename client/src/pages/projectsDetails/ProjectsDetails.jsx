@@ -5,22 +5,32 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import { useContext } from "react";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+// import axios from "axios";
 
 const ProjectDetails = () => {
   const { id } = useParams();
-  console.log('use params',id);
+  console.log('use params', id);
   const { darkMode } = useContext(ThemeContext); // Get dark mode state
 
-  const { data: project = [], isLoading, isError } = useQuery({
+  // const { data: project = [], isLoading, isError } = useQuery({
+  //   queryKey: ["project", id],
+  //   queryFn: async () => {
+  //     const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${id}`);
+  //     return response.data;
+  //   },
+  // });
+
+  const { data: project, isLoading, isError } = useQuery({
     queryKey: ["project", id],
     queryFn: async () => {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${id}`);
-      return response.data;
+      const response = await fetch('/projects.json'); // ✅ from public folder
+      const projects = await response.json();
+      // ✅ match by id — convert both to string for safe comparison
+      return projects.find((p) => String(p.id) === String(id)) || null;
     },
   });
-  console.log(`all project---->`,project);
-  
+  console.log(`all project---->`, project);
+
   if (isLoading) return <p className="text-center text-lg">Loading...</p>;
   if (isError || !project) return <p className="text-center text-red-500">Project not found!</p>;
 
@@ -37,17 +47,15 @@ const ProjectDetails = () => {
   if (!project) return <div className="text-white text-center">Project not found!</div>;
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }} 
-      animate={{ opacity: 1, y: 0 }} 
-      transition={{ duration: 0.5 }} 
-      className={`container mx-auto px-4 rounded-lg my-8 py-10 shadow-lg ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-      }`}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`container mx-auto px-4 rounded-lg my-8 py-10 shadow-lg ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        }`}
     >
-      <div className={`card bg-base-100 rounded-xl overflow-hidden text-black ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-      }`}>
+      <div className={`card bg-base-100 rounded-xl overflow-hidden text-black ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        }`}>
         <motion.img
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
@@ -61,19 +69,19 @@ const ProjectDetails = () => {
           <p className="text-sm  mt-2 text-justify">{project.description}</p>
 
           <h3 className="text-xl font-bold mt-4">Technologies Used:</h3>
-          
+
           <div className="flex flex-wrap gap-2 mt-2">
             {typeof project.technologies === "string"
               ? project.technologies.split(',').map((tech, index) => (
-                  <span className={`badge ${techColors[tech.trim()] || "badge-neutral"}`} key={index}>
-                    {tech.trim()}
-                  </span>
-                ))
+                <span className={`badge ${techColors[tech.trim()] || "badge-neutral"}`} key={index}>
+                  {tech.trim()}
+                </span>
+              ))
               : project.technologies.map((tech, index) => (
-                  <span className={`badge ${techColors[tech.trim()] || "badge-neutral"}`} key={index}>
-                    {tech.trim()}
-                  </span>
-                ))}
+                <span className={`badge ${techColors[tech.trim()] || "badge-neutral"}`} key={index}>
+                  {tech.trim()}
+                </span>
+              ))}
           </div>
 
 

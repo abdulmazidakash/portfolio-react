@@ -1,86 +1,119 @@
 /* eslint-disable react/prop-types */
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { Link } from "react-router"; // Fixed import
-import { ThemeContext } from "../contexts/ThemeContext";
+import { Link } from "react-router";
 import { useContext } from "react";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const ProjectCard = ({ project }) => {
-  const { darkMode } = useContext(ThemeContext); // Optional for manual toggle
-  // Define a mapping of technology names to DaisyUI badge colors
+  const { darkMode } = useContext(ThemeContext);
+
+  // Technology badge color mapping
   const techColors = {
-	React: "badge-primary",
-	"Tailwind CSS": "badge-secondary",
-	MongoDB: "badge-success",
-	Stripe: "badge-warning",
-	Express: "badge-accent",
-	"Firebase Auth": "badge-neutral",
-	Node: "badge-info",
-	Gemini: "badge-accent",
+    React: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+    "Tailwind CSS": "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
+    MongoDB: "bg-green-500/10 text-green-400 border-green-500/30",
+    Stripe: "bg-purple-500/10 text-purple-400 border-purple-500/30",
+    Express: "bg-rose-500/10 text-rose-400 border-rose-500/30",
+    "Firebase Auth": "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
+    Node: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+    Gemini: "bg-purple-500/10 text-purple-400 border-purple-500/30",
   };
-  
 
   return (
-        <motion.div
-          key={project.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.3 }}
-          className={`card w-full shadow-lg border bg-base-100 border-gray-200 dark:border-gray-700 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
-        >
-          <figure>
-            <img
-              src={project.imageUrl}
-              alt={project.name}
-              className="w-full h-48 object-cover border-b-1 border-gray-300"
-            />
-          </figure>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -8, transition: { duration: 0.3 } }}
+      transition={{ duration: 0.5 }}
+      className={`group relative rounded-3xl overflow-hidden border transition-all duration-300
+        ${darkMode 
+          ? "bg-gray-900 border-white/10 hover:border-white/20" 
+          : "bg-white border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl"
+        }`}
+    >
+      {/* Project Image */}
+      <div className="relative">
+        <img
+          src={project.imageUrl}
+          alt={project.name}
+          className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        
+        {/* Overlay Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
 
-          <div className="card-body px-5 py-4">
-            <h2 className={`card-title text-xl font-bold  ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-              {project.name}
-            </h2>
-            <p className={`text-sm text-justify ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-            {project.description?.split(" ").slice(0, 10).join(" ")}...
-            </p>
+      <div className="p-6">
+        {/* Project Title */}
+        <h2 className={`text-xl font-bold mb-3 line-clamp-2 min-h-[56px] 
+          ${darkMode ? "text-white" : "text-gray-900"}`}>
+          {project.name}
+        </h2>
 
-            {/* technology input  */}
-            {/* technology input  */}
-        <div className="flex flex-wrap gap-2 mt-2">
+        {/* Description */}
+        <p className={`text-sm leading-relaxed mb-5 line-clamp-3 min-h-[63px]
+          ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+          {project.description?.split(" ").slice(0, 25).join(" ")}...
+        </p>
+
+        {/* Technologies */}
+        <div className="flex flex-wrap gap-2 mb-6">
           {(typeof project.technologies === "string"
-            ? project.technologies.split(',')
-            : project.technologies
+            ? project.technologies.split(",")
+            : project.technologies || []
           )
-            .slice(0, 3) // 👈 LIMIT TO 3 BADGES
+            .slice(0, 3)
             .map((tech, index) => (
-              <span className={`badge ${techColors[tech.trim()] || "badge-neutral"}`} key={index}>
+              <span
+                key={index}
+                className={`text-xs font-medium px-3 py-1 rounded-full border transition-all
+                  ${techColors[tech.trim()] || 
+                    (darkMode 
+                      ? "bg-gray-800 text-gray-300 border-gray-700" 
+                      : "bg-gray-100 text-gray-700 border-gray-300")
+                  }`}
+              >
                 {tech.trim()}
               </span>
             ))}
         </div>
 
-
-        <div className="card-actions justify-between mt-5 flex flex-wrap gap-2">
+        {/* Action Buttons */}
+        <div className="flex flex-wrap gap-3">
           <a
             href={project.liveLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-sm btn-outline gap-2"
+            className={`flex-1 btn btn-sm gap-2 transition-all
+              ${darkMode 
+                ? "btn-outline border-white/30 hover:bg-white/10 hover:border-white/50 text-white" 
+                : "btn-outline border-gray-300 hover:bg-gray-50"
+              }`}
           >
-            Live <FaExternalLinkAlt />
+            Live <FaExternalLinkAlt className="text-xs" />
           </a>
+
           <Link
-            to={`/projects/${project._id}`}
-            className="btn btn-sm btn-outline gap-2"
+            to={`/projects/${project.id}`}
+            className={`flex-1 btn btn-sm gap-2 transition-all
+              ${darkMode 
+                ? "btn-outline border-white/30 hover:bg-white/10 hover:border-white/50 text-white" 
+                : "btn-outline border-gray-300 hover:bg-gray-50"
+              }`}
           >
-            View More <FaExternalLinkAlt />
+            Details <FaExternalLinkAlt className="text-xs" />
           </Link>
+
           <a
             href={project.githubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-sm btn-outline gap-2"
+            className={`flex-1 btn btn-sm gap-2 transition-all
+              ${darkMode 
+                ? "btn-outline border-white/30 hover:bg-white/10 hover:border-white/50 text-white" 
+                : "btn-outline border-gray-300 hover:bg-gray-50"
+              }`}
           >
             GitHub <FaGithub />
           </a>
