@@ -4,53 +4,16 @@ const app = express();
 require('dotenv').config();
 const nodemailer = require("nodemailer");
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 9000;
 
 
 //middleware
 app.use(cors());
 app.use(express.json());
 
-//send email using nodemailer
-// const sendEmail = (emailAddress, emailData) =>{
-// 	//create transporter
-// 	const transporter = nodemailer.createTransport({
-// 		host: "smtp.gmail.com",
-// 		port: 587,
-// 		secure: false, // true for 465, false for other ports
-// 		auth: {
-// 		  user: process.env.NODEMAILER_USER,
-// 		  pass: process.env.NODEMAILER_PASS,
-// 		},
-// 	  });
+const password = encodeURIComponent(process.env.DB_PASS);
 
-// 	  transporter.verify(error, success =>{
-// 		if(error){
-// 			console.log(error);
-// 		}else{
-// 			console.log('Transporter is ready to emails.', success);
-// 		}
-// 	  });
-
-// 	  const mailBody = {
-// 		from: process.env.NODEMAILER_USER,
-// 		to: emailAddress,
-// 		subject: emailData?.subject,
-// 		html: "<b>Hello world?</b>",
-// 	  };
-
-// 	  //send email
-// 	  transporter.sendMail(mailBody, (error, info) =>{
-// 		if(error){
-// 			console.log(error);
-// 		}else{
-// 			console.log('Email sent: ' + info.response);
-// 		}
-// 	  })
-// }
-
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.j0hxo.mongodb.net/portfolio-project?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${password}@cluster0.j0hxo.mongodb.net/portfolio-project?retryWrites=true&w=majority`;
 
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
