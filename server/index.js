@@ -8,7 +8,14 @@ const port = process.env.PORT || 9000;
 
 
 //middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://your-frontend-domain.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 
 const password = encodeURIComponent(process.env.DB_PASS);
